@@ -1,0 +1,40 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "NestJS Backend",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "start:dev"
+      ],
+      "cwd": "${workspaceFolder}/backend",
+      "console": "integratedTerminal",
+      "restart": true
+    },
+    {
+      "name": "Flutter Frontend (Chrome)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "cwd": "${workspaceFolder}/frontend",
+      "args": [
+        "-d",
+        "chrome",
+        "--web-port",
+        "8080"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: Backend + Frontend",
+      "configurations": [
+        "NestJS Backend",
+        "Flutter Frontend (Chrome)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Flutter Web Development Configuration
+# https://docs.flutter.dev/platform-integration/web/web-dev-config-file
+
+server:
+  host: "localhost"
+  port: 8080
+
+  # Proxy API requests to the NestJS backend
+  proxy:
+    - target: "http://localhost:3000/"
+      prefix: "/api/"
+    - target: "http://localhost:3000/"
+      prefix: "/auth/"
+    - target: "http://localhost:3000/"
+      prefix: "/profile/"
+    - target: "http://localhost:3000/"
+      prefix: "/wallet/"
+    - target: "http://localhost:3000/"
+      prefix: "/match/"
+    - target: "http://localhost:3000/"
+      prefix: "/chat/"
