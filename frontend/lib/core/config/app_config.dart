@@ -1,18 +1,19 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 /// Centralized app configuration for URLs and environment settings.
-// TODO: Consider migrating URLs to a .env file using flutter_dotenv for better dev/prod separation
 class AppConfig {
   AppConfig._();
 
   // ──── Backend API ────
   /// Used by mobile builds (Android emulator → host machine)
-  static const String mobileApiUrl = 'http://10.0.2.2:3000';
+  static String get mobileApiUrl => dotenv.env['MOBILE_API_URL'] ?? 'http://10.0.2.2:3000';
 
   /// Used by iOS simulator / desktop
-  static const String desktopApiUrl = 'http://localhost:3000';
+  static String get desktopApiUrl => dotenv.env['DESKTOP_API_URL'] ?? 'http://localhost:3000';
 
   /// Web builds use empty string — requests are proxied
   /// via web_dev_config.yaml to the backend.
-  static const String webApiUrl = '';
+  static String get webApiUrl => dotenv.env['WEB_API_URL'] ?? '';
 
   // ──── Timeouts ────
   static const Duration connectTimeout = Duration(seconds: 10);

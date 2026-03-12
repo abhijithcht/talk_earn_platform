@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:frontend/core/theme/app_strings.dart';
 import 'package:frontend/core/theme/design_constants.dart';
 import 'package:frontend/core/widgets/animated_background.dart';
@@ -16,7 +17,10 @@ class ProfileScreen extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final user = authState.value;
     final isMobile = Responsive.isMobile(context);
-    // TODO: Display a Shimmer/Skeleton placeholder when authState is loading, instead of an empty screen.
+
+    if (authState.isLoading && user == null) {
+      return const _ProfileSkeleton();
+    }
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -361,6 +365,178 @@ class _ActionButton extends StatelessWidget {
         title: Text(label, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
         trailing:
             trailing ?? const Icon(Icons.chevron_right, color: DesignConstants.textMuted, size: 20),
+      ),
+    );
+  }
+}
+
+class _ProfileSkeleton extends StatelessWidget {
+  const _ProfileSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    final isMobile = Responsive.isMobile(context);
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text(AppStrings.profile),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: AnimatedBackground(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Header Skeleton
+              Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Container(
+                    height: 280,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(gradient: DesignConstants.primaryGradient),
+                  ),
+                  Container(
+                    height: 280,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          DesignConstants.surfaceSolid.withValues(alpha: 0.8),
+                          DesignConstants.surfaceSolid,
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: DesignConstants.pL),
+                    child: Shimmer.fromColors(
+                      baseColor: DesignConstants.primary.withValues(alpha: 0.3),
+                      highlightColor: DesignConstants.accent.withValues(alpha: 0.3),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 120,
+                            height: 120,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: DesignConstants.pL),
+                          Container(
+                            width: 150,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            width: 200,
+                            height: 14,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? DesignConstants.pM : DesignConstants.pXL,
+                  vertical: DesignConstants.pXL,
+                ),
+                child: Shimmer.fromColors(
+                  baseColor: DesignConstants.surfaceSolid.withValues(alpha: 0.5),
+                  highlightColor: DesignConstants.primary.withValues(alpha: 0.1),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Stats Grid Skeleton
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: DesignConstants.pM),
+                          Expanded(
+                            child: Container(
+                              height: 120,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: DesignConstants.pXXL),
+                      // Actions Section Skeleton
+                      Container(
+                        width: 120,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      const SizedBox(height: DesignConstants.pL),
+                      Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      const SizedBox(height: DesignConstants.pM),
+                      Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      const SizedBox(height: DesignConstants.pM),
+                      Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      const SizedBox(height: DesignConstants.pXXL),
+                      Container(
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
