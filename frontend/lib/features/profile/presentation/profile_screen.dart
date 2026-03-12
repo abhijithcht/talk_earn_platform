@@ -16,6 +16,7 @@ class ProfileScreen extends ConsumerWidget {
     final authState = ref.watch(authProvider);
     final user = authState.value;
     final isMobile = Responsive.isMobile(context);
+    // TODO: Display a Shimmer/Skeleton placeholder when authState is loading, instead of an empty screen.
 
     return Scaffold(
       extendBodyBehindAppBar: true,
