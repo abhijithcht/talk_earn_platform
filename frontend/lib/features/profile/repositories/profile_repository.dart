@@ -18,4 +18,30 @@ class ProfileRepository {
     );
     return User.fromJson(response.data!);
   }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    await _dio.post<dynamic>(
+      ApiEndpoints.profileChangePassword,
+      data: {'currentPassword': currentPassword, 'newPassword': newPassword},
+    );
+  }
+
+  Future<void> uploadPicture(String filePath) async {
+    final formData = FormData.fromMap({'file': await MultipartFile.fromFile(filePath)});
+    await _dio.post<dynamic>(
+      ApiEndpoints.profilePicture,
+      data: formData,
+      options: Options(contentType: 'multipart/form-data'),
+    );
+  }
+
+  Future<void> deleteAccount(String currentPassword) async {
+    await _dio.delete<dynamic>(
+      ApiEndpoints.profileDeleteAccount,
+      data: {'currentPassword': currentPassword},
+    );
+  }
 }

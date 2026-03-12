@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/core/router/app_routes.dart';
 import 'package:frontend/core/theme/app_strings.dart';
 import 'package:frontend/core/theme/design_constants.dart';
 import 'package:frontend/core/widgets/animated_background.dart';
@@ -8,6 +9,8 @@ import 'package:frontend/core/widgets/glass_card.dart';
 import 'package:frontend/core/widgets/responsive.dart';
 import 'package:frontend/features/auth/providers/auth_provider.dart';
 import 'package:frontend/features/home/presentation/radar_animation.dart';
+import 'package:frontend/features/match/providers/match_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -100,7 +103,10 @@ class _HeaderActions extends ConsumerWidget {
         children: [
           _ActionButton(icon: Icons.notifications_none_rounded, onPressed: () {}),
           const SizedBox(width: DesignConstants.pS),
-          _ActionButton(icon: Icons.settings_outlined, onPressed: () {}),
+          _ActionButton(
+              icon: Icons.settings_outlined,
+              onPressed: () => context.push(AppRoutes.settings),
+          ),
           const SizedBox(width: DesignConstants.pM),
           Container(width: 1, height: 20, color: DesignConstants.glassBorder),
           const SizedBox(width: 12),
@@ -289,15 +295,15 @@ class _MainHub extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // In a real scenario, this would watch a matchingProvider.
-    final searchActive = ref.watch(authProvider).isLoading;
+    final matchState = ref.watch(matchProvider);
+    final isSearching = matchState.status == MatchStatus.searching;
 
     return GlassCard(
       padding: const EdgeInsets.all(DesignConstants.pXXL),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (searchActive) const _MatchingState() else const _IdleState(),
+          if (isSearching) const _MatchingState() else const _IdleState(),
           const SizedBox(height: DesignConstants.pXXL),
           const _ConnectionStatus(),
         ],
@@ -306,11 +312,11 @@ class _MainHub extends ConsumerWidget {
   }
 }
 
-class _IdleState extends StatelessWidget {
+class _IdleState extends ConsumerWidget {
   const _IdleState();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         const Text(
@@ -343,19 +349,22 @@ class _IdleState extends StatelessWidget {
               icon: Icons.chat_bubble_rounded,
               label: 'Text Chat',
               color: DesignConstants.primary,
-              onPressed: () {},
+              onPressed: () =>
+                  ref.read(matchProvider.notifier).findMatch('text'),
             ),
             _MatchButton(
               icon: Icons.mic_rounded,
               label: 'Voice Call',
               color: DesignConstants.secondary,
-              onPressed: () {},
+              onPressed: () =>
+                  ref.read(matchProvider.notifier).findMatch('audio'),
             ),
             _MatchButton(
               icon: Icons.videocam_rounded,
               label: 'Video Call',
               color: DesignConstants.accent,
-              onPressed: () {},
+              onPressed: () =>
+                  ref.read(matchProvider.notifier).findMatch('video'),
             ),
           ],
         ),
@@ -364,49 +373,76 @@ class _IdleState extends StatelessWidget {
   }
 }
 
-class _MatchingState extends StatelessWidget {
+class _MatchingState extends ConsumerWidget {
   const _MatchingState();
 
   @override
-  Widget build(BuildContext context) {
-    return const Column(
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
       children: [
-        RadarAnimation(isMatching: true),
-        SizedBox(height: DesignConstants.pXL),
-        Text(
-          'Looking for someone...',
+        const RadarAnimation(isMatching: true),
+        const SizedBox(height: DesignConstants.pXL),
+        const Text(
+          AppStrings.searching,
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w700,
             color: DesignConstants.secondary,
           ),
         ),
+        const SizedBox(height: DesignConstants.pXL),
+        ElevatedButton.icon(
+          onPressed: () => ref.read(matchProvider.notifier).cancelMatch(),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: DesignConstants.danger,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(
+              horizontal: DesignConstants.pXL,
+              vertical: DesignConstants.pM,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(999),
+            ),
+          ),
+          icon: const Icon(Icons.close_rounded, size: 20),
+          label: const Text(AppStrings.cancelSearch),
+        ),
       ],
     );
   }
 }
 
-class _ConnectionStatus extends StatelessWidget {
+class _ConnectionStatus extends ConsumerWidget {
   const _ConnectionStatus();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final matchState = ref.watch(matchProvider);
+    final isSearching = matchState.status == MatchStatus.searching;
+    final statusColor =
+        isSearching ? DesignConstants.secondary : DesignConstants.accent;
+    final statusText =
+        isSearching ? AppStrings.searching.toUpperCase() : AppStrings.networkStable;
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: DesignConstants.pL, vertical: 10),
-      decoration: BoxDecoration(
-        color: DesignConstants.accent.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: DesignConstants.accent.withValues(alpha: 0.2)),
+      padding: const EdgeInsets.symmetric(
+        horizontal: DesignConstants.pL,
+        vertical: 10,
       ),
-      child: const Row(
+      decoration: BoxDecoration(
+        color: statusColor.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: statusColor.withValues(alpha: 0.2)),
+      ),
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _PulseIndicator(),
-          SizedBox(width: DesignConstants.pM),
+          _PulseIndicator(color: statusColor),
+          const SizedBox(width: DesignConstants.pM),
           Text(
-            AppStrings.networkStable,
+            statusText,
             style: TextStyle(
-              color: DesignConstants.accent,
+              color: statusColor,
               fontSize: 12,
               fontWeight: FontWeight.w900,
               letterSpacing: 1.5,
@@ -481,19 +517,24 @@ class _MatchButton extends StatelessWidget {
 }
 
 class _PulseIndicator extends StatefulWidget {
-  const _PulseIndicator();
+  const _PulseIndicator({this.color = DesignConstants.accent});
+  final Color color;
 
   @override
   State<_PulseIndicator> createState() => _PulseIndicatorState();
 }
 
-class _PulseIndicatorState extends State<_PulseIndicator> with SingleTickerProviderStateMixin {
+class _PulseIndicatorState extends State<_PulseIndicator>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
   }
 
   @override
@@ -511,11 +552,13 @@ class _PulseIndicatorState extends State<_PulseIndicator> with SingleTickerProvi
           width: 8,
           height: 8,
           decoration: BoxDecoration(
-            color: DesignConstants.accent,
+            color: widget.color,
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: DesignConstants.accent.withValues(alpha: 0.5 * (1.0 - _controller.value)),
+                color: widget.color.withValues(
+                  alpha: 0.5 * (1.0 - _controller.value),
+                ),
                 blurRadius: 10 * _controller.value,
                 spreadRadius: 8 * _controller.value,
               ),
