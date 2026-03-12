@@ -41,16 +41,9 @@ class MatchNotifier extends Notifier<MatchState> {
     state = MatchState(status: MatchStatus.searching, medium: medium);
     try {
       final data = await ref.read(matchRepositoryProvider).findMatch(medium);
-      state = MatchState(
-        status: MatchStatus.matched,
-        medium: medium,
-        matchData: data,
-      );
+      state = MatchState(status: MatchStatus.matched, medium: medium, matchData: data);
     } catch (e) {
-      state = MatchState(
-        status: MatchStatus.error,
-        errorMessage: e.toString(),
-      );
+      state = MatchState(status: MatchStatus.error, errorMessage: e.toString());
     }
   }
 
@@ -66,9 +59,7 @@ class MatchNotifier extends Notifier<MatchState> {
   void reset() => state = const MatchState();
 }
 
-final Provider<MatchRepository> matchRepositoryProvider = Provider(
-  (ref) => MatchRepository(),
-);
+final Provider<MatchRepository> matchRepositoryProvider = Provider((ref) => MatchRepository());
 
 final NotifierProvider<MatchNotifier, MatchState> matchProvider =
     NotifierProvider<MatchNotifier, MatchState>(MatchNotifier.new);

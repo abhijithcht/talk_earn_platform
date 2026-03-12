@@ -19,8 +19,7 @@ class AppStrings {
 
   // Home
   static const String readyToConnect = 'Ready to Connect?';
-  static const String chooseMode =
-      'Choose a mode and start earning coins while talking.';
+  static const String chooseMode = 'Choose a mode and start earning coins while talking.';
   static const String networkStable = 'NETWORK STABLE';
 
   // Wallet

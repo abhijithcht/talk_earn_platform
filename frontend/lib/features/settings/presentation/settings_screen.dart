@@ -38,9 +38,7 @@ class SettingsScreen extends ConsumerWidget {
                       loading: () => const Center(
                         child: Padding(
                           padding: EdgeInsets.all(DesignConstants.pXXL),
-                          child: CircularProgressIndicator(
-                            color: DesignConstants.secondary,
-                          ),
+                          child: CircularProgressIndicator(color: DesignConstants.secondary),
                         ),
                       ),
                       error: (_, _) => const _SettingsBody(),
@@ -64,21 +62,16 @@ class _SettingsHeader extends StatelessWidget {
     return Row(
       children: [
         IconButton(
-          onPressed: () => context.canPop()
-              ? context.pop()
-              : context.go(AppRoutes.home),
+          onPressed: () => context.canPop() ? context.pop() : context.go(AppRoutes.home),
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           style: IconButton.styleFrom(
             backgroundColor: Colors.white.withValues(alpha: 0.05),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
         ),
         const SizedBox(width: DesignConstants.pM),
         ShaderMask(
-          shaderCallback: (bounds) =>
-              DesignConstants.textGradient.createShader(
+          shaderCallback: (bounds) => DesignConstants.textGradient.createShader(
             Rect.fromLTWH(0, 0, bounds.width, bounds.height),
           ),
           child: const Text(
@@ -97,11 +90,7 @@ class _SettingsHeader extends StatelessWidget {
 }
 
 class _SettingsBody extends StatelessWidget {
-  const _SettingsBody({
-    this.fullName,
-    this.email,
-    this.gender,
-  });
+  const _SettingsBody({this.fullName, this.email, this.gender});
 
   final String? fullName;
   final String? email;
@@ -112,10 +101,7 @@ class _SettingsBody extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _EditProfileSection(
-          fullName: fullName,
-          gender: gender,
-        ),
+        _EditProfileSection(fullName: fullName, gender: gender),
         const SizedBox(height: DesignConstants.pXL),
         _AccountInfoSection(email: email),
         const SizedBox(height: DesignConstants.pXL),
@@ -135,8 +121,7 @@ class _EditProfileSection extends ConsumerStatefulWidget {
   final String? gender;
 
   @override
-  ConsumerState<_EditProfileSection> createState() =>
-      _EditProfileSectionState();
+  ConsumerState<_EditProfileSection> createState() => _EditProfileSectionState();
 }
 
 class _EditProfileSectionState extends ConsumerState<_EditProfileSection> {
@@ -203,9 +188,7 @@ class _EditProfileSectionState extends ConsumerState<_EditProfileSection> {
             onChanged: (v) {
               if (v != null) setState(() => _selectedGender = v);
             },
-            decoration: const InputDecoration(
-              labelText: AppStrings.genderLabel,
-            ),
+            decoration: const InputDecoration(labelText: AppStrings.genderLabel),
           ),
           const SizedBox(height: DesignConstants.pM),
           TextField(
@@ -224,10 +207,7 @@ class _EditProfileSectionState extends ConsumerState<_EditProfileSection> {
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: Colors.white,
-                      ),
+                      child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                     )
                   : const Text(AppStrings.saveProfile),
             ),
@@ -262,20 +242,11 @@ class _AccountInfoSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionTitle(
-            icon: Icons.info_outline_rounded,
-            title: AppStrings.accountInfo,
-          ),
+          const _SectionTitle(icon: Icons.info_outline_rounded, title: AppStrings.accountInfo),
           const SizedBox(height: DesignConstants.pL),
-          _InfoRow(
-            label: AppStrings.emailLabel,
-            value: email ?? '—',
-          ),
+          _InfoRow(label: AppStrings.emailLabel, value: email ?? '—'),
           const SizedBox(height: DesignConstants.pM),
-          const _InfoRow(
-            label: AppStrings.ageLabel,
-            value: AppStrings.ageNotVerified,
-          ),
+          const _InfoRow(label: AppStrings.ageLabel, value: AppStrings.ageNotVerified),
         ],
       ),
     );
@@ -300,10 +271,7 @@ class _InfoRow extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
         ),
-        Text(
-          value,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-        ),
+        Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
       ],
     );
   }
@@ -315,12 +283,10 @@ class _ChangePasswordSection extends ConsumerStatefulWidget {
   const _ChangePasswordSection();
 
   @override
-  ConsumerState<_ChangePasswordSection> createState() =>
-      _ChangePasswordSectionState();
+  ConsumerState<_ChangePasswordSection> createState() => _ChangePasswordSectionState();
 }
 
-class _ChangePasswordSectionState
-    extends ConsumerState<_ChangePasswordSection> {
+class _ChangePasswordSectionState extends ConsumerState<_ChangePasswordSection> {
   final _currentPwController = TextEditingController();
   final _newPwController = TextEditingController();
   String? _message;
@@ -333,7 +299,9 @@ class _ChangePasswordSectionState
   }
 
   Future<void> _submit() async {
-    await ref.read(profileActionsProvider.notifier).changePassword(
+    await ref
+        .read(profileActionsProvider.notifier)
+        .changePassword(
           currentPassword: _currentPwController.text,
           newPassword: _newPwController.text,
         );
@@ -353,25 +321,18 @@ class _ChangePasswordSectionState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _SectionTitle(
-            icon: Icons.lock_outline_rounded,
-            title: AppStrings.changePassword,
-          ),
+          const _SectionTitle(icon: Icons.lock_outline_rounded, title: AppStrings.changePassword),
           const SizedBox(height: DesignConstants.pL),
           TextField(
             controller: _currentPwController,
             obscureText: true,
-            decoration: const InputDecoration(
-              hintText: AppStrings.currentPasswordLabel,
-            ),
+            decoration: const InputDecoration(hintText: AppStrings.currentPasswordLabel),
           ),
           const SizedBox(height: DesignConstants.pM),
           TextField(
             controller: _newPwController,
             obscureText: true,
-            decoration: const InputDecoration(
-              hintText: AppStrings.newPasswordLabel,
-            ),
+            decoration: const InputDecoration(hintText: AppStrings.newPasswordLabel),
           ),
           const SizedBox(height: DesignConstants.pL),
           SizedBox(
@@ -404,8 +365,7 @@ class _DangerZoneSection extends ConsumerStatefulWidget {
   const _DangerZoneSection();
 
   @override
-  ConsumerState<_DangerZoneSection> createState() =>
-      _DangerZoneSectionState();
+  ConsumerState<_DangerZoneSection> createState() => _DangerZoneSectionState();
 }
 
 class _DangerZoneSectionState extends ConsumerState<_DangerZoneSection> {
@@ -418,9 +378,7 @@ class _DangerZoneSectionState extends ConsumerState<_DangerZoneSection> {
   }
 
   Future<void> _deleteAccount() async {
-    await ref
-        .read(profileActionsProvider.notifier)
-        .deleteAccount(_deletePasswordController.text);
+    await ref.read(profileActionsProvider.notifier).deleteAccount(_deletePasswordController.text);
 
     if (mounted) {
       await TokenStorage.deleteToken();
@@ -435,9 +393,7 @@ class _DangerZoneSectionState extends ConsumerState<_DangerZoneSection> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: DesignConstants.danger.withValues(alpha: 0.3),
-        ),
+        border: Border.all(color: DesignConstants.danger.withValues(alpha: 0.3)),
       ),
       child: GlassCard(
         padding: const EdgeInsets.all(DesignConstants.pL),
@@ -452,18 +408,13 @@ class _DangerZoneSectionState extends ConsumerState<_DangerZoneSection> {
             const SizedBox(height: DesignConstants.pM),
             const Text(
               AppStrings.deleteAccountDesc,
-              style: TextStyle(
-                color: DesignConstants.textMuted,
-                fontSize: 13,
-              ),
+              style: TextStyle(color: DesignConstants.textMuted, fontSize: 13),
             ),
             const SizedBox(height: DesignConstants.pL),
             TextField(
               controller: _deletePasswordController,
               obscureText: true,
-              decoration: const InputDecoration(
-                hintText: AppStrings.confirmPasswordHint,
-              ),
+              decoration: const InputDecoration(hintText: AppStrings.confirmPasswordHint),
             ),
             const SizedBox(height: DesignConstants.pL),
             SizedBox(
@@ -505,11 +456,7 @@ class _SectionTitle extends StatelessWidget {
         const SizedBox(width: DesignConstants.pM),
         Text(
           title,
-          style: TextStyle(
-            color: color,
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-          ),
+          style: TextStyle(color: color, fontSize: 16, fontWeight: FontWeight.w800),
         ),
       ],
     );

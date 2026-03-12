@@ -6,10 +6,7 @@ import 'package:frontend/core/widgets/glass_card.dart';
 import 'package:frontend/features/rating/providers/rating_provider.dart';
 
 /// Shows the post-session rating dialog.
-Future<void> showRatingDialog(
-  BuildContext context, {
-  required int ratedUserId,
-}) {
+Future<void> showRatingDialog(BuildContext context, {required int ratedUserId}) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
@@ -31,10 +28,9 @@ class _RatingDialogState extends ConsumerState<_RatingDialog> {
   Future<void> _submit() async {
     if (_selectedRating == 0) return;
 
-    await ref.read(ratingProvider.notifier).submitRating(
-          ratedUserId: widget.ratedUserId,
-          score: _selectedRating,
-        );
+    await ref
+        .read(ratingProvider.notifier)
+        .submitRating(ratedUserId: widget.ratedUserId, score: _selectedRating);
 
     if (mounted) Navigator.of(context).pop();
   }
@@ -51,27 +47,19 @@ class _RatingDialogState extends ConsumerState<_RatingDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ShaderMask(
-              shaderCallback: (bounds) =>
-                  DesignConstants.textGradient.createShader(
+              shaderCallback: (bounds) => DesignConstants.textGradient.createShader(
                 Rect.fromLTWH(0, 0, bounds.width, bounds.height),
               ),
               child: const Text(
                 AppStrings.rateSession,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.white),
               ),
             ),
             const SizedBox(height: DesignConstants.pM),
             const Text(
               AppStrings.rateSessionDesc,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: DesignConstants.textMuted,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: DesignConstants.textMuted, fontSize: 14),
             ),
             const SizedBox(height: DesignConstants.pXL),
             Row(
@@ -99,20 +87,13 @@ class _RatingDialogState extends ConsumerState<_RatingDialog> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _selectedRating > 0 && !ratingState.isLoading
-                    ? _submit
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
+                onPressed: _selectedRating > 0 && !ratingState.isLoading ? _submit : null,
+                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 16)),
                 child: ratingState.isLoading
                     ? const SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.white,
-                        ),
+                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                       )
                     : const Text(AppStrings.submitFeedback),
               ),

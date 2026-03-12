@@ -104,8 +104,8 @@ class _HeaderActions extends ConsumerWidget {
           _ActionButton(icon: Icons.notifications_none_rounded, onPressed: () {}),
           const SizedBox(width: DesignConstants.pS),
           _ActionButton(
-              icon: Icons.settings_outlined,
-              onPressed: () => context.push(AppRoutes.settings),
+            icon: Icons.settings_outlined,
+            onPressed: () => context.push(AppRoutes.settings),
           ),
           const SizedBox(width: DesignConstants.pM),
           Container(width: 1, height: 20, color: DesignConstants.glassBorder),
@@ -277,7 +277,10 @@ class _MatchPreferences extends StatelessWidget {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white.withValues(alpha: 0.05),
-              contentPadding: const EdgeInsets.symmetric(horizontal: DesignConstants.pM, vertical: DesignConstants.pM),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: DesignConstants.pM,
+                vertical: DesignConstants.pM,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: BorderSide.none,
@@ -349,22 +352,19 @@ class _IdleState extends ConsumerWidget {
               icon: Icons.chat_bubble_rounded,
               label: 'Text Chat',
               color: DesignConstants.primary,
-              onPressed: () =>
-                  ref.read(matchProvider.notifier).findMatch('text'),
+              onPressed: () => ref.read(matchProvider.notifier).findMatch('text'),
             ),
             _MatchButton(
               icon: Icons.mic_rounded,
               label: 'Voice Call',
               color: DesignConstants.secondary,
-              onPressed: () =>
-                  ref.read(matchProvider.notifier).findMatch('audio'),
+              onPressed: () => ref.read(matchProvider.notifier).findMatch('audio'),
             ),
             _MatchButton(
               icon: Icons.videocam_rounded,
               label: 'Video Call',
               color: DesignConstants.accent,
-              onPressed: () =>
-                  ref.read(matchProvider.notifier).findMatch('video'),
+              onPressed: () => ref.read(matchProvider.notifier).findMatch('video'),
             ),
           ],
         ),
@@ -400,9 +400,7 @@ class _MatchingState extends ConsumerWidget {
               horizontal: DesignConstants.pXL,
               vertical: DesignConstants.pM,
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(999),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
           ),
           icon: const Icon(Icons.close_rounded, size: 20),
           label: const Text(AppStrings.cancelSearch),
@@ -419,16 +417,11 @@ class _ConnectionStatus extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final matchState = ref.watch(matchProvider);
     final isSearching = matchState.status == MatchStatus.searching;
-    final statusColor =
-        isSearching ? DesignConstants.secondary : DesignConstants.accent;
-    final statusText =
-        isSearching ? AppStrings.searching.toUpperCase() : AppStrings.networkStable;
+    final statusColor = isSearching ? DesignConstants.secondary : DesignConstants.accent;
+    final statusText = isSearching ? AppStrings.searching.toUpperCase() : AppStrings.networkStable;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DesignConstants.pL,
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: DesignConstants.pL, vertical: 10),
       decoration: BoxDecoration(
         color: statusColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(999),
@@ -524,17 +517,13 @@ class _PulseIndicator extends StatefulWidget {
   State<_PulseIndicator> createState() => _PulseIndicatorState();
 }
 
-class _PulseIndicatorState extends State<_PulseIndicator>
-    with SingleTickerProviderStateMixin {
+class _PulseIndicatorState extends State<_PulseIndicator> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat();
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
   }
 
   @override
@@ -556,9 +545,7 @@ class _PulseIndicatorState extends State<_PulseIndicator>
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: widget.color.withValues(
-                  alpha: 0.5 * (1.0 - _controller.value),
-                ),
+                color: widget.color.withValues(alpha: 0.5 * (1.0 - _controller.value)),
                 blurRadius: 10 * _controller.value,
                 spreadRadius: 8 * _controller.value,
               ),
