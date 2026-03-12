@@ -42,14 +42,14 @@ flutter run -d chrome
 
 ## Dependencies
 
-| Package | Purpose |
-|---|---|
-| `flutter_riverpod` + `riverpod_annotation` | State management |
-| `go_router` | Declarative routing |
-| `dio` | HTTP client |
-| `freezed` + `json_serializable` | Immutable models |
-| `flutter_secure_storage` | JWT token persistence |
-| `google_fonts` | Outfit typeface |
-| `cached_network_image` | Image caching |
-| `socket_io_client` | Real-time communication |
-| `very_good_analysis` | Lint rules |
+| Package | Purpose | Version |
+|---|---|---|
+| `flutter_riverpod` + `riverpod_annotation` | State management | `^3.2.1` / `^4.0.2` |
+| `go_router` | Declarative routing | `^17.1.0` |
+| `dio` | HTTP client | `^5.9.2` |
+| `freezed` + `json_serializable` | Immutable models | `^3.2.5` / `^6.13.0` |
+| `flutter_secure_storage` | JWT token persistence | `^10.0.0` |
+| `google_fonts` | Outfit typeface | `^8.0.2` |
+| `cached_network_image` | Image caching | `^3.4.1` |
+| `socket_io_client` | Real-time communication | `^3.1.4` |
+| `very_good_analysis` | Lint rules | `^10.0.0` |

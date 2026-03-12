@@ -11,13 +11,13 @@ Talk & Earn is a Flutter application that lets users connect via text, voice, or
 | Layer | Technology | Version |
 |---|---|---|
 | **Framework** | Flutter | SDK ^3.11.0 |
-| **State Management** | Riverpod (annotation + generator) | 3.2 / 4.0 |
-| **Navigation** | GoRouter | 17.1 |
-| **HTTP Client** | Dio | 5.9 |
-| **Models** | Freezed + json_serializable | 3.2 / 6.13 |
-| **Token Storage** | flutter_secure_storage | 10.0 |
-| **Typography** | Google Fonts (Outfit) | 8.0 |
-| **Lint Rules** | very_good_analysis | 10.0 |
+| **State Management** | Riverpod (annotation + generator) | ^3.2.1 / ^4.0.3 |
+| **Navigation** | GoRouter | ^17.1.0 |
+| **HTTP Client** | Dio | ^5.9.2 |
+| **Models** | Freezed + json_serializable | ^3.2.5 / ^6.13.0 |
+| **Token Storage** | flutter_secure_storage | ^10.0.0 |
+| **Typography** | Google Fonts (Outfit) | ^8.0.2 |
+| **Lint Rules** | very_good_analysis | ^10.0.0 |
 | **Backend** | NestJS | — |
 
 ## Directory Structure
