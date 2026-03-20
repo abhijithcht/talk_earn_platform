@@ -15,6 +15,7 @@ import { MailService } from '../mail/mail.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +55,7 @@ export class AuthService {
     // Send OTP via email
     await this.mailService.sendOtp(dto.email, otpCode);
 
-    return { message: 'Registered. Please verify your email.' };
+    return ResponseHelper.success('Registered. Please verify your email.');
   }
 
   async login(dto: LoginDto) {
@@ -78,7 +79,10 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email };
     const accessToken = this.jwtService.sign(payload);
 
-    return { access_token: accessToken, token_type: 'bearer' };
+    return ResponseHelper.success('Login successful', {
+      access_token: accessToken,
+      token_type: 'bearer',
+    });
   }
 
   async verifyEmail(dto: VerifyEmailDto) {
@@ -96,6 +100,6 @@ export class AuthService {
     user.otpCode = null;
     await this.userRepository.save(user);
 
-    return { message: 'Email verified successfully' };
+    return ResponseHelper.success('Email verified successfully');
   }
 }

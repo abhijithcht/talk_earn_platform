@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:frontend/core/api/api_error_handler.dart';
 import 'package:frontend/core/router/app_routes.dart';
 import 'package:frontend/core/theme/app_strings.dart';
 import 'package:frontend/core/theme/design_constants.dart';
@@ -32,10 +33,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) context.go('/');
     } catch (e) {
       if (mounted) {
+        final errorMessage = ApiErrorHandler.getMessage(e);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: DesignConstants.danger.withValues(alpha: 0.9),
-            content: Text('Login failed: $e', style: const TextStyle(color: Colors.white)),
+            content: Text(errorMessage, style: const TextStyle(color: Colors.white)),
           ),
         );
       }

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import { SessionRecord } from '../entities/session.entity';
 import { User } from '../entities/user.entity';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 interface QueueEntry {
   userId: number;
@@ -74,11 +75,11 @@ export class MatchService {
         });
         await this.sessionRepository.save(session);
 
-        return {
+        return ResponseHelper.success('Match found', {
           matched: true,
           session_id: session.id,
           partner_id: matched.userId,
-        };
+        });
       }
     }
 
@@ -91,11 +92,11 @@ export class MatchService {
     };
     await this.redis.hset('matchQueue', String(userId), JSON.stringify(entry));
 
-    return { matched: false, message: 'Added to matching queue' };
+    return ResponseHelper.success('Added to matching queue', { matched: false });
   }
 
   async cancelMatch(userId: number) {
     await this.redis.hdel('matchQueue', String(userId));
-    return { message: 'Matching cancelled' };
+    return ResponseHelper.success('Matching cancelled');
   }
 }

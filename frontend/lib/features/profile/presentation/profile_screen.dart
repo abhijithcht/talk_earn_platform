@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:frontend/core/theme/app_strings.dart';
 import 'package:frontend/core/theme/design_constants.dart';
 import 'package:frontend/core/widgets/animated_background.dart';
@@ -8,6 +7,7 @@ import 'package:frontend/core/widgets/glass_card.dart';
 import 'package:frontend/core/widgets/responsive.dart';
 import 'package:frontend/features/auth/models/user.dart';
 import 'package:frontend/features/auth/providers/auth_provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});

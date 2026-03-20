@@ -32,7 +32,8 @@ class AuthRepository {
       data: {'email': email, 'password': password},
     );
 
-    final token = response.data!['access_token'] as String;
+    final data = response.data!['data'] as Map<String, dynamic>;
+    final token = data['access_token'] as String;
     await TokenStorage.saveToken(token);
     return token;
   }
@@ -43,7 +44,7 @@ class AuthRepository {
 
   Future<User> getCurrentUser() async {
     final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.profileMe);
-    return User.fromJson(response.data!);
+    return User.fromJson(response.data!['data'] as Map<String, dynamic>);
   }
 
   Future<void> logout() async {

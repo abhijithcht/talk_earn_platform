@@ -12,6 +12,7 @@ import { User } from '../entities/user.entity';
 import { Wallet } from '../entities/wallet.entity';
 import { EarnDto } from './dto/earn.dto';
 import { WithdrawDto } from './dto/withdraw.dto';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class WalletService {
@@ -31,7 +32,7 @@ export class WalletService {
     if (!wallet) {
       throw new NotFoundException('Wallet not found');
     }
-    return { balance: wallet.balance };
+    return ResponseHelper.success('Balance retrieved', { balance: wallet.balance });
   }
 
   async earn(userId: number, dto: EarnDto) {
@@ -77,10 +78,9 @@ export class WalletService {
     });
     await this.transactionRepository.save(transaction);
 
-    return {
-      message: 'Coins added',
+    return ResponseHelper.success('Coins added', {
       balance: updatedWallet?.balance || wallet.balance + finalCoins,
-    };
+    });
   }
 
   async withdraw(userId: number, dto: WithdrawDto) {
@@ -137,12 +137,11 @@ export class WalletService {
 
       // TODO: Integrate actual Stripe/Razorpay payout
 
-      return {
-        message: 'Withdrawal initiated',
+      return ResponseHelper.success('Withdrawal initiated', {
         coins_deducted: dto.coins,
         usd_amount: usdAmount,
         balance: wallet.balance,
-      };
+      });
     } catch (err) {
       await queryRunner.rollbackTransaction();
       throw err;

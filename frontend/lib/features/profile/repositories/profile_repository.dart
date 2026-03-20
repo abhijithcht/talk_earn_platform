@@ -8,7 +8,7 @@ class ProfileRepository {
 
   Future<User> getProfile() async {
     final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.profileMe);
-    return User.fromJson(response.data!);
+    return User.fromJson(response.data!['data'] as Map<String, dynamic>);
   }
 
   Future<User> updateProfile(Map<String, dynamic> updates) async {
@@ -16,7 +16,7 @@ class ProfileRepository {
       ApiEndpoints.profileUpdate,
       data: updates,
     );
-    return User.fromJson(response.data!);
+    return User.fromJson(response.data!['data'] as Map<String, dynamic>);
   }
 
   Future<void> changePassword({

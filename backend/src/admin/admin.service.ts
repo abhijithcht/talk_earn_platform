@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { AuditLog } from '../entities/audit-log.entity';
 import { BannedId } from '../entities/banned-id.entity';
 import { User } from '../entities/user.entity';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class AdminService {
@@ -18,7 +19,7 @@ export class AdminService {
   ) {}
 
   async getPendingVerifications() {
-    return this.userRepository.find({
+    const pending = await this.userRepository.find({
       where: { verificationStatus: 'pending' },
       select: [
         'id',
@@ -30,6 +31,7 @@ export class AdminService {
         'createdAt',
       ],
     });
+    return ResponseHelper.success('Pending verifications retrieved', pending);
   }
 
   async approveVerification(adminId: number, userId: number) {
@@ -49,7 +51,7 @@ export class AdminService {
     });
     await this.auditLogRepository.save(audit);
 
-    return { message: 'User verification approved' };
+    return ResponseHelper.success('User verification approved');
   }
 
   async rejectVerification(adminId: number, userId: number) {
@@ -68,7 +70,7 @@ export class AdminService {
     });
     await this.auditLogRepository.save(audit);
 
-    return { message: 'User verification rejected' };
+    return ResponseHelper.success('User verification rejected');
   }
 
   async banUser(adminId: number, userId: number, reason?: string) {
@@ -96,6 +98,6 @@ export class AdminService {
     });
     await this.auditLogRepository.save(audit);
 
-    return { message: 'User banned' };
+    return ResponseHelper.success('User banned');
   }
 }

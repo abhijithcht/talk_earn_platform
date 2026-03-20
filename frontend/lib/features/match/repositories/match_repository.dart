@@ -12,7 +12,7 @@ class MatchRepository {
     );
     // TODO: Implement WebRTC signaling or Chat socket connection once match is found
     // Ref: lib/features/chat/
-    return response.data!;
+    return response.data!['data'] as Map<String, dynamic>;
   }
 
   Future<void> cancelMatch() async {

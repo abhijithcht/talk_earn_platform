@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { AuditLog } from '../entities/audit-log.entity';
 import { BannedId } from '../entities/banned-id.entity';
 import { User } from '../entities/user.entity';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class VerificationService {
@@ -46,7 +47,7 @@ export class VerificationService {
     });
     await this.auditLogRepository.save(audit);
 
-    return { message: 'Verification submitted. Awaiting admin review.' };
+    return ResponseHelper.success('Verification submitted. Awaiting admin review.');
   }
 
   async getStatus(userId: number) {
@@ -55,9 +56,9 @@ export class VerificationService {
       throw new NotFoundException('User not found');
     }
 
-    return {
+    return ResponseHelper.success('Verification status retrieved', {
       verification_status: user.verificationStatus,
       is_verified: user.isVerified,
-    };
+    });
   }
 }

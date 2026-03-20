@@ -11,6 +11,7 @@ import { Avatar } from '../entities/avatar.entity';
 import { User } from '../entities/user.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class ProfileService {
@@ -33,7 +34,7 @@ export class ProfileService {
     // Strip sensitive fields
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { hashedPassword, otpCode, ...profile } = user;
-    return profile;
+    return ResponseHelper.success('Profile retrieved', profile);
   }
 
   async updateProfile(userId: number, dto: UpdateProfileDto) {
@@ -52,11 +53,12 @@ export class ProfileService {
     if (dto.interests !== undefined) user.interests = dto.interests;
 
     await this.userRepository.save(user);
-    return { message: 'Profile updated' };
+    return ResponseHelper.success('Profile updated');
   }
 
   async listAvatars() {
-    return this.avatarRepository.find();
+    const avatars = await this.avatarRepository.find();
+    return ResponseHelper.success('Avatars retrieved', avatars);
   }
 
   async uploadPicture(userId: number, filePath: string) {
@@ -68,7 +70,7 @@ export class ProfileService {
     user.profilePictureUrl = filePath;
     await this.userRepository.save(user);
 
-    return { message: 'Profile picture updated', url: filePath };
+    return ResponseHelper.success('Profile picture updated', { url: filePath });
   }
 
   async changePassword(userId: number, dto: ChangePasswordDto) {
@@ -88,7 +90,7 @@ export class ProfileService {
     user.hashedPassword = await bcrypt.hash(dto.newPassword, 10);
     await this.userRepository.save(user);
 
-    return { message: 'Password changed successfully' };
+    return ResponseHelper.success('Password changed successfully');
   }
 
   async deleteAccount(userId: number, currentPassword: string) {
@@ -103,6 +105,6 @@ export class ProfileService {
     }
 
     await this.userRepository.remove(user);
-    return { message: 'Account deleted' };
+    return ResponseHelper.success('Account deleted');
   }
 }

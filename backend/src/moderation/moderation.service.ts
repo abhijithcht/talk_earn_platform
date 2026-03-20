@@ -10,6 +10,7 @@ import { AuditLog } from '../entities/audit-log.entity';
 import { BannedId } from '../entities/banned-id.entity';
 import { User } from '../entities/user.entity';
 import { Warning } from '../entities/warning.entity';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class ModerationService {
@@ -70,11 +71,10 @@ export class ModerationService {
     });
     await this.auditLogRepository.save(audit);
 
-    return {
-      message: `Warning issued (${level})`,
+    return ResponseHelper.success(`Warning issued (${level})`, {
       warning_count: target.warnings,
       level,
-    };
+    });
   }
 
   async appealWarning(userId: number, warningId: number) {
@@ -90,6 +90,6 @@ export class ModerationService {
     warning.appealed = true;
     await this.warningRepository.save(warning);
 
-    return { message: 'Appeal submitted for review' };
+    return ResponseHelper.success('Appeal submitted for review');
   }
 }

@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { SessionRecord } from '../entities/session.entity';
 import { User } from '../entities/user.entity';
 import { SubmitRatingDto } from './dto/submit-rating.dto';
+import { ResponseHelper } from '../common/helpers/response.helper';
 
 @Injectable()
 export class RatingService {
@@ -55,9 +56,8 @@ export class RatingService {
     });
     await this.sessionRepository.save(session);
 
-    return {
-      message: 'Rating submitted successfully',
+    return ResponseHelper.success('Rating submitted successfully', {
       new_average: targetUser.rating,
-    };
+    });
   }
 }

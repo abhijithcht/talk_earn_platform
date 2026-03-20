@@ -7,7 +7,8 @@ class WalletRepository {
 
   Future<int> getBalance() async {
     final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.walletBalance);
-    return response.data!['balance'] as int;
+    final data = response.data!['data'] as Map<String, dynamic>;
+    return data['balance'] as int;
   }
 
   Future<void> withdraw(int amount, String method, String details) async {
